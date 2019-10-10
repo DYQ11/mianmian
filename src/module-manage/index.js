@@ -7,8 +7,8 @@
  */
 
 // vue-router
-import {asyncRouterMap} from '@/router'
-import routerMaps from './router'
+import {asyncRouterMap} from '@/router' // 主路由
+import routerMaps from './router' // 分支业务路由
 // vuex
 import app from './store/app'
 

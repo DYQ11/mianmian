@@ -29,4 +29,4 @@ export const remove = data => createAPI(`/articles/${data.id}`, 'delete', data)
 
 // 文章状态
 export const state = data =>
-  createAPI(`/articles/${data.id}/state`, 'post', data)
+  createAPI(`/articles/${data.id}/${data.state}`, 'post', data)
