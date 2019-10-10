@@ -1,4 +1,8 @@
 export default {
+  question: {
+    'xinzeng': 'new add question',
+    'pidao': 'many import'
+  },
   route: {
     dashboard: 'Dashboard',
     manage: 'manage',

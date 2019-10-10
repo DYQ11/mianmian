@@ -2,6 +2,16 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-row>
+        <el-col>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="$router.push('/questions/new')"
+          >{{ $t('question.xinzeng') }}</el-button>
+          <el-button type="danger" size="mini">{{ $t('question.pidao') }}</el-button>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="6">
           学科：
           <el-select style="width:160px" v-model="searchForm.subjectID">
@@ -146,6 +156,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="searchForm.page"
+        :page-sizes="[4, 10, 15, 20]"
+        :page-size="searchForm.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tot"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -184,7 +203,10 @@ export default {
       difficultyList,
       // questionTypeList: questionTypeList,简易成员赋值
       questionTypeList,
+      tot: 0, // 数据总条数
       searchForm: {
+        page: 1, // 默认获取第1页数据
+        pagesize: 4, // 默认每页获得4条数据
         subjectID: '', // 科学
         difficulty: '', // 难度
         questionType: '', // 试题类型
@@ -201,18 +223,29 @@ export default {
     }
   },
   methods: {
-     // 删除题库
+    // 每页条数变化的处理
+    handleSizeChange(val) {
+      this.searchForm.pagesize = val
+      this.getQuestionsList()
+    },
+    // 当前页码变化的回调处理
+    handleCurrentChange(val) {
+      this.searchForm.page = val
+      this.getQuestionsList()
+    },
+    // 删除题库
     del(info) {
       // 确认框
       this.$confirm('确认要删除该题库么?', '删除', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
           remove(info) // 删除数据
           this.getQuestionList() // 更新数据
-        }).catch(() => {
         })
+        .catch(() => {})
     },
     // 难度数字转汉字
     difficultyFMT(row, column, cellValue) {
@@ -223,10 +256,13 @@ export default {
       return this.questionTypeList[cellValue - 1]['label']
     },
     // 获得基础题库列表信息
+    // 基础题库 列表
     async getQuestionsList() {
       var rst = await list(this.searchForm)
-      // 把获得好的题库列表信息赋予给 questionList 成员
+      // 把获得好的题库数据列表 赋予给questionsList
       this.questionsList = rst.data.items
+      // 获得数据总条数并赋予给searchForm.tot成员
+      this.tot = rst.data.counts
     },
     // 获得区县，getCitys方法在模板中声明的时候，没有设置()
     // 这个pname形参就代表被选中的省份信息

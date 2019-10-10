@@ -1,4 +1,8 @@
 export default {
+  question: {
+    'xinzeng': '新增试题',
+    'pidao': '批量导入'
+  },
   route: {
     dashboard: '首页',
     manage: '后台管理',
